@@ -1,0 +1,5 @@
+.DS_Store
+Dataset.nosync/*
+Karabo-Pipeline
+KaraboTests/.tmp
+deepsource
