@@ -1,0 +1,111 @@
+logs_final_01:
+    200 epochs
+    lr = 0.1
+
+logs_final_001:
+    200 epochs
+    lr = 0.01
+
+    quasi 0 partout
+
+logs_final_01_001:
+    200 epochs
+    lr = 0.1 till 50epochs lr = 0.01
+
+    quasi 0 partout
+
+logs_final_01_001_0001:
+    200 epochs
+    lr = 0.1 till 50epochs lr = 0.01 till 100 epochs lr = 0.001
+
+logs_final_01_001_500e_100e:
+    500 epochs
+    lr = 0.1 till 100epochs lr = 0.01
+
+    C'est mieux mais toujours la meme pred quasi et c'est pas fou non plus
+    
+logs_final_0001:
+    1000 epochs
+    lr = 0.001
+
+    mouais (see screenshot)
+
+
+
+Autre test dont j'ai pas gardé les logs:
+- 2000 epoch lr = 0.001 -> full zeros
+- 200 epochs lr = 0.01 512 hidden layer instead of 1024 -> comme les autre lr = 0.01
+- 500 epochs lr = 0.01 128 batch size instead of 64 -> 
+- MSE & 500 epochs & 0.01 -> full zeros
+- Adding noise to the target (std = 0.2)
+- 500 epochs - lr = [0.01, 0.001] (e250) 64 hidden layer size -> worked once but not stable
+- noise std = 0.3 - 500 epochs - lr = [0.01, 0.001] (e250) 64 hidden layer size -> didn't worked
+- noise std = 0.4 - 500 epochs - lr = [0.01, 0.001] (e250) 64 hidden layer size -> didn't worked
+- 64 with SGD and noise 0.2 -> completely wrong output
+- 512 with SGD -> wrong as well
+- 64 without noise, and with the dataloader thing -> full of ones
+- 64 with noise 0.2 and with data loader thing -> wrong
+
+
+
+resnet
+- resnet first try: with 128 hidden layer size 0.01 -> e 250 then 0.001 -> see plot
+- resnet 2nd try: with 64 hidden layer size 0.01 -> e 250 then 0.001 -> same observation
+- 256 -> same output
+- 512 -> same output
+- 32 -> same output
+- 64 with noise -> same output
+- 500 epochs - lr = [0.01, 0.001] (e250) 128 hidden layer size -> same output
+- 64 -> lr = [0.1, 0.01, 0.001] (e50 & e250) -> same output
+- 64 - lr = [0.01, 0.001] -> same res
+- 1024 - lr = [0.01, 0.001] -> same res
+- 10 - lr = [0.01, 0.001] -> same res
+- 64 with SGD optim -> same res
+- 512 with SGD optim -> same res
+
+
+Reducing the model Keep the two first resblock only from the blob finder
+- size 64 with noise -> always same output
+- size 512 with noise -> always same output almost full black
+- size 128 with noise -> training seemed to work with the plots but always same output 
+- size 128 without noise -> not working 
+
+Figured out that removing the model.eval during evaluation worked.
+-* size 128 with noise & 300 epochs & weight decay=0 -> training seemed to work with the plots but worked without the model.eval
+- size 128 with noise & 200 epochs -> deosn't work
+- size 64 with noise & 300 epochs & weight decay=0 -> always same output & completely wrong
+- size 128 with noise & 300 epochs & weight decay=1e-5 -> doesn't work, full black
+- size 128 with noise & 300 epochs & weight decay=1e-7 -> doesn't work (same output)
+-* size 256 with noise & 300 epochs & weight decay=0 -> work without the eval mode & not in eval mode
+-* size 128 with noise & 300 epochs & weight decay=1e-10 -> doesn't work (same output) for eval mode and works without it
+-* size 128 with noise & 300 epochs & weight decay=0 & 128 batch size -> doesn't work (same output) for eval mode and works without it
+- size 128 with noise & 300 epochs & weight decay=1e-3 & 64 batch size -> doesn't work at all
+-* size 128 with noise & 300 epochs & weight decay=0 & 1024 batch size -> CUDA out of mem
+-* size 128 with noise & 300 epochs & weight decay=0 & 64 batch size lr 0.01 & = 0.001 after 50e -> always same output but works without the eval mode
+
+Reducing the model one more time 
+- size 64 with noise & 300 epochs & batchsize 64 & weight decay=0 -> deosn't work
+- size 128 with noise & 300 epochs & batchsize 64 & weight decay=0 -> deosn't work
+- size 256 with noise & 300 epochs & batchsize 256 & weight decay=0 -> deosn't work
+- size 256 with noise & 300 epochs & batchsize 64 & weight decay=0 -> 
+- size 512 with noise & 300 epochs & batchsize 256 & weight decay=0 -> 
+
+
+Final tests:
+- size 128 with noise & 300 epochs & weight decay=0 & 128 batch size:
+    - epoch 160 -> deosn't work at all
+    - epoch 180 -> deosn't work at all
+    - epoch 200 -> deosn't work at all
+    - epoch 220 -> deosn't work at all
+    - epoch 240 ->
+    - epoch 260 ->
+    - epoch 280 ->
+- size 128 with noise & 300 epochs & weight decay=0 & 128 batch size & without Batchnorm:
+    - epoch 160 -> same output every time with & without eval mode
+    - epoch 180 -> same output every time with & without eval mode
+    - epoch 200 -> same output every time with & without eval mode
+    - epoch 220 -> same output every time with & without eval mode
+    - epoch 240 -> same output every time with & without eval mode
+    - epoch 260 -> same output every time with & without eval mode
+    - epoch 280 -> same output every time with & without eval mode
+
